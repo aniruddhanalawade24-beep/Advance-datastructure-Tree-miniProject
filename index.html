@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Tree File System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>🌳 Advanced Tree File System Manager</header>
+
+<div class="container">
+
+<div class="sidebar">
+
+<h3>Explorer</h3>
+<ul id="tree"></ul>
+
+</div>
+
+<div class="main">
+
+<div class="controls">
+
+<input id="nameInput" placeholder="Enter name">
+
+<button onclick="createFolder()">New Folder</button> <button onclick="createFile()">New File</button> <button onclick="deleteNode()">Delete</button> <button onclick="searchNode()">Search</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+Total Nodes
+<h2 id="totalNodes">1</h2>
+</div>
+
+<div class="stat">
+Tree Depth
+<h2 id="depth">1</h2>
+</div>
+
+</div>
+
+<div class="card">
+
+<h4>Selected Path</h4>
+<p id="path">Root</p>
+
+</div>
+
+<div class="card">
+
+<h4>Search Result</h4>
+<p id="searchResult">None</p>
+
+</div>
+
+</div>
+
+</div>
+<script src="script.js"></script>
+
+</body>
+</html>
