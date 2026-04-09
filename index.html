@@ -1,69 +1,109 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Advanced Tree File System</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tree File Explorer — DSA Visualizer</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div id="app">
 
-<header>🌳 Advanced Tree File System Manager</header>
+  <div class="hdr">
+    <div class="hdr-title">
+      <div class="hdr-icon">⬡</div>
+      Tree File Explorer
+      <span class="hdr-badge">DSA Visualizer</span>
+    </div>
+    <div class="hdr-stats">
+      <div class="hdr-stat"><div class="hdr-stat-val" id="statNodes">1</div><div class="hdr-stat-lbl">Nodes</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-val" id="statDepth">1</div><div class="hdr-stat-lbl">Depth</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-val" id="statFolders">1</div><div class="hdr-stat-lbl">Folders</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-val" id="statFiles">0</div><div class="hdr-stat-lbl">Files</div></div>
+    </div>
+  </div>
 
-<div class="container">
+  <div class="toolbar">
+    <input class="tb-input" id="nameInput" placeholder="Enter name...">
+    <button class="tb-btn tb-btn-primary" onclick="createFolder()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M1 3a1 1 0 011-1h4l2 2h6a1 1 0 011 1v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="currentColor" opacity=".7"/>
+        <path d="M8 7v4M6 9h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      New Folder
+    </button>
+    <button class="tb-btn tb-btn-secondary" onclick="createFile()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M4 2h6l3 3v9a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z" fill="currentColor" opacity=".5"/>
+        <path d="M10 2v3h3M6 8h4M6 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      New File
+    </button>
+    <button class="tb-btn tb-btn-secondary" onclick="renameSelected()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+      </svg>
+      Rename
+    </button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn tb-btn-secondary" onclick="searchNode()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Search
+    </button>
+    <button class="tb-btn tb-btn-secondary" onclick="collapseAll()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M3 4h10M3 8h7M3 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Collapse
+    </button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn tb-btn-danger" onclick="deleteNode()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M4 5h8l-1 8H5L4 5z" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M3 5h10M6 5V3h4v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Delete
+    </button>
+  </div>
 
-<div class="sidebar">
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Explorer</div>
+      </div>
+      <div class="tree-container" id="treeContainer"></div>
+    </div>
 
-<h3>Explorer</h3>
-<ul id="tree"></ul>
+    <div class="main">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('viz', this)">Graph View</div>
+        <div class="tab" onclick="switchTab('info', this)">Node Info</div>
+      </div>
+      <div class="panel active" id="vizPanel">
+        <canvas id="treeCanvas"></canvas>
+      </div>
+      <div class="panel" id="infoPanel">
+        <div class="info-grid" id="infoCards"></div>
+        <div class="info-section" id="infoDetails"></div>
+        <div class="info-section">
+          <h4>Full Path</h4>
+          <div class="path-display" id="pathDisplay">Root</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
-<div class="main">
-
-<div class="controls">
-
-<input id="nameInput" placeholder="Enter name">
-
-<button onclick="createFolder()">New Folder</button> <button onclick="createFile()">New File</button> <button onclick="deleteNode()">Delete</button> <button onclick="searchNode()">Search</button>
-
+<div id="toast">
+  <div class="toast-dot" id="toastDot"></div>
+  <span id="toastMsg"></span>
 </div>
 
-<div class="stats">
-
-<div class="stat">
-Total Nodes
-<h2 id="totalNodes">1</h2>
-</div>
-
-<div class="stat">
-Tree Depth
-<h2 id="depth">1</h2>
-</div>
-
-</div>
-
-<div class="card">
-
-<h4>Selected Path</h4>
-<p id="path">Root</p>
-
-</div>
-
-<div class="card">
-
-<h4>Search Result</h4>
-<p id="searchResult">None</p>
-
-</div>
-
-</div>
-
-</div>
 <script src="script.js"></script>
-
 </body>
 </html>
